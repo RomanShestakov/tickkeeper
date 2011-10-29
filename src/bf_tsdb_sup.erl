@@ -9,8 +9,8 @@
 %% Supervisor callbacks
 -export([init/1]).
 
-%% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+%% %% Helper macro for declaring children of supervisor
+%% -define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
 
 %% ===================================================================
 %% API functions
@@ -24,5 +24,5 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
-
+    Bf_TSDB = {'bf_tsdb',{'bf_tsdb',start_link,[]},permanent,2000,worker,['bf_tsdb']},
+    {ok, {{one_for_one, 5, 10}, [Bf_TSDB]}}.

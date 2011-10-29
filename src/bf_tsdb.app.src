@@ -9,6 +9,7 @@
                  ]},
   {mod, { bf_tsdb_app, []}},
   {env, [
-	 {log4erl_config, "etc/log4erl.conf"}
+	 {log4erl_config, "etc/log4erl.conf"},
+	 {tsdb_root, "/Users/romanshestakov/Development/bf_tsdb/db"}
   ]}
  ]}.

@@ -21,7 +21,8 @@
 -module(bf_tsdb_util).
 
 -export([
-	 log4erl_config/0
+	 log4erl_config/0,
+	 tsdb_root/0
 	]).
 
 %%--------------------------------------------------------------------
@@ -37,3 +38,16 @@ log4erl_config() ->
 	undefined -> throw({error, log4erl_config_not_defined})
     end.
 
+
+%%--------------------------------------------------------------------
+%% @doc
+%% Get log config of the project
+%% creates a full path name to the job file definition.
+%% @end
+%%--------------------------------------------------------------------
+-spec tsdb_root() -> string() | no_return().
+tsdb_root() ->
+    case application:get_env(bf_tsdb, tsdb_root) of
+	{ok, Value} -> Value;
+	undefined -> throw({error, tsdb_root_not_defined})
+    end.
