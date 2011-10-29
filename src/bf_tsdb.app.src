@@ -1,0 +1,14 @@
+{application, bf_tsdb,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { bf_tsdb_app, []}},
+  {env, [
+	 {log4erl_config, "etc/log4erl.conf"}
+  ]}
+ ]}.
