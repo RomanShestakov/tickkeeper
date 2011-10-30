@@ -89,7 +89,8 @@ handle_call({close, Name}, _From, State) ->
 	    {reply, error_db_not_open, State}
     end;
 handle_call({read, Name}, _From, State) ->
-    case bf_tsdb_storage:read(State#state.tsdb_root, Name) of
+    Schema = [{"Time", integer}, {"Bid", float}, {"Ask", float}],
+    case bf_tsdb_storage:read(State#state.tsdb_root, Name, Schema) of
 	{ok, Curve} -> 
 	    {reply, Curve, State};
 	{error, Reason} ->
