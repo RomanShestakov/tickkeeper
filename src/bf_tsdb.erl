@@ -11,7 +11,10 @@
 
 %% API
 -export([start_link/0,
-	 open/1]).
+	 open/1,
+	 close/1,
+	 append/2,
+	 read/1]).
 
 -define(SERVER, ?MODULE).
 
@@ -19,7 +22,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
 	 terminate/2, code_change/3]).
 
--record(state, {tsdb_root}).
+-record(state, {tsdb_root, open_db = []}).
 
 %%====================================================================
 %% API
@@ -34,9 +37,18 @@ start_link() ->
 %%====================================================================
 %% gen_server callbacks
 %%====================================================================
+-spec open(string()) -> ok | {error, any()}.
 open(Name) ->
     gen_server:call({global, ?SERVER}, {open, Name}).
 
+close(Name) ->
+    gen_server:call({global, ?SERVER}, {close, Name}).
+
+read(Name) ->
+    gen_server:call({global, ?SERVER}, {read, Name}).
+
+append(Tick, Name) ->
+    gen_server:cast({global, ?SERVER}, {append, Tick, Name}).
 
 %%--------------------------------------------------------------------
 %% Function: init(Args) -> {ok, State} |
@@ -60,9 +72,30 @@ init([]) ->
 %%                                      {stop, Reason, State}
 %% Description: Handling call messages
 %%--------------------------------------------------------------------
-handle_call({open, _Name}, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State};
+handle_call({open, Name}, _From, State) ->
+    case bf_tsdb_storage:open_db(State#state.tsdb_root, Name) of
+	{ok, Fd} ->
+	    {reply, ok, State#state{open_db = [{Name, Fd} | State#state.open_db]}};
+	{error, Reason} ->
+	    {reply, {error, Reason}, State}
+    end;
+handle_call({close, Name}, _From, State) ->
+    case proplists:lookup(Name, State#state.open_db) of
+	{Name, Fd} -> 
+	    Result = bf_tsdb_storage:close_db(Fd),
+	    {reply, Result, State#state{open_db = proplists:delete(Name, State#state.open_db)}};
+	none ->
+	    log4erl:error("db ~p is not open", [Name]),    
+	    {reply, error_db_not_open, State}
+    end;
+handle_call({read, Name}, _From, State) ->
+    case bf_tsdb_storage:read(State#state.tsdb_root, Name) of
+	{ok, Curve} -> 
+	    {reply, Curve, State};
+	{error, Reason} ->
+	    log4erl:error("cant' read db: ~p, ~p", [Name, Reason]),    
+	    {reply, {error, Reason}, State}
+    end;
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -73,6 +106,15 @@ handle_call(_Request, _From, State) ->
 %%                                      {stop, Reason, State}
 %% Description: Handling cast messages
 %%--------------------------------------------------------------------
+handle_cast({append, Data, Name}, State) ->
+    case proplists:lookup(Name, State#state.open_db) of
+	{Name, Fd} -> 
+	    bf_tsdb_storage:append(Data, Fd),
+	    {noreply, State};    
+	none -> 
+ 	    log4erl:error("cant' add tick as db ~p is not open", [Name]),    
+	    {noreply, State}
+    end;
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
@@ -92,7 +134,8 @@ handle_info(_Info, State) ->
 %% cleaning up. When it returns, the gen_server terminates with Reason.
 %% The return value is ignored.
 %%--------------------------------------------------------------------
-terminate(_Reason, _State) ->
+terminate(_Reason, State) ->
+    [ bf_tsdb_storage:close_db(Fd) || {_Name, Fd} <- State#state.open_db],
     ok.
 
 %%--------------------------------------------------------------------
