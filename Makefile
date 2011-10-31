@@ -10,6 +10,7 @@ clean:
 	rm -rf test/*.beam
 
 test: all
+	cp -r etc .eunit/.
 	rebar skip_deps=true eunit
 
 doc:
