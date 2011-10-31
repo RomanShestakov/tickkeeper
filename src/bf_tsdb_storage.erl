@@ -10,11 +10,17 @@
 
 
 create(FullName, Schema) ->
-    %% convert schema to format used by db
-    ConvertedSchema = convert_schema(Schema),
-    unconsult(FullName ++ ".head", [ConvertedSchema]),
-    open(FullName).
-
+    case filelib:is_regular(FullName) of
+	true -> {error, {db_already_exists, FullName}};
+	false ->
+	    %% convert schema to format used by db
+	    ConvertedSchema = convert_schema(Schema),
+	    %% same schema into head file
+	    unconsult(FullName ++ ".head", [ConvertedSchema]),
+	    %% open db
+	    open(FullName)
+    end.
+	    
 open(FileName) ->
     %%%Schema = read_schema(FileName).
     case file:open(FileName, [read, append, binary, delayed_write, read_ahead]) of
