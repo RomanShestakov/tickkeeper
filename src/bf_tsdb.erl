@@ -84,11 +84,16 @@ handle_call({create, Name, Schema}, _From, State) ->
 	    {reply, {error, Reason}, State}
     end;
 handle_call({open, Name}, _From, State) ->
-    case bf_tsdb_storage:open(db_full_name(State#state.tsdb_root, Name)) of
-	{ok, Fd} ->
-	    {reply, ok, State#state{open_db = [{Name, Fd} | State#state.open_db]}};
-	{error, Reason} ->
-	    {reply, {error, Reason}, State}
+    case proplists:lookup(Name, State#state.open_db) of
+	{Name, _Fd} ->
+	    {reply, {error, db_already_open}, State};
+	none ->
+	    case bf_tsdb_storage:open(db_full_name(State#state.tsdb_root, Name)) of
+		{ok, Fd} ->
+		    {reply, ok, State#state{open_db = [{Name, Fd} | State#state.open_db]}};
+		{error, Reason} ->
+		    {reply, {error, Reason}, State}
+	    end
     end;
 handle_call({close, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of

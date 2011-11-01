@@ -19,23 +19,29 @@
 -spec create(string(), list()) -> {ok, io_device()} | {error, any()}.
 create(FullName, Schema) ->
     case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
-	true -> {error, {db_already_exists, FullName}};
+	true -> {error, db_already_exists};
 	false ->
 	    %% convert schema to format used by db
 	    ConvertedSchema = convert_schema(Schema),
 	    %% save schema into head file
 	    unconsult(FullName ++ ".head", [ConvertedSchema]),
-	    %% open db
-	    open(FullName)
-    end.
-	    
-open(FileName) ->
-    %%%Schema = read_schema(FileName).
-    case file:open(FileName, [read, append, binary, delayed_write, read_ahead]) of
-	{ok, Fd} ->  {ok, Fd};
-	{error, Reason} -> {error, Reason}
+	    %% open new db file
+	    file:open(FullName, [read, append, binary, delayed_write, read_ahead])
     end.
 
+%%--------------------------------------------------------------------
+%% @doc
+%% open existing db
+%% @end
+%%--------------------------------------------------------------------
+-spec open(string()) -> {ok, io_device()} | {error, any()} | {error, {db_not_exist, string()}}.
+open(FullName) ->
+    %% db must already exist
+    case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
+	true -> file:open(FullName, [read, append, binary, delayed_write, read_ahead]);
+	false -> {error, {db_not_exist, FullName}}
+    end.
+	    
 append(Record, Fd, _Schema) ->
     file:write(Fd, Record).
 
