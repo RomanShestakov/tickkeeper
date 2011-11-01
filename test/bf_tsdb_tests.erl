@@ -4,6 +4,9 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+-define(SCHEMA, [{timestamp, integer}, {bid, float}, {ask, float}]).
+
+
 process_test_() ->
     {setup, local,
      fun start_process/0,
@@ -11,9 +14,10 @@ process_test_() ->
      fun run/1}.
 
 start_process() ->
-    application:set_env(bf_tsdb,  tsdb_root, "."),
-    application:set_env(bf_tsdb,  log4erl_config, "../etc/log4erl.conf"),
     bf_tsdb_app:start().
+    %%application:set_env(bf_tsdb,  tsdb_root, ".eunit/db").
+    %%application:set_env(bf_tsdb,  log4erl_config, "../etc/log4erl.conf").
+
  
 stop_process(_P) ->
     application:unset_env(bf_tsdb, tsdb_root),
@@ -21,10 +25,12 @@ stop_process(_P) ->
     ok.
 
 run(_P) ->
-    [
-     ?_assertMatch(ok, bf_tsdb:open("test_db"))
-     %% ?_assertMatch("../scripts", ec_util:scripts_dir()),
-     %% ?_assertMatch("../config", ec_util:config_dir()),
-    ].
+    {inorder, 
+     [
+      ?_assertMatch(ok, bf_tsdb:create("test_db", ?SCHEMA)),
+      ?_assertMatch({error, {db_already_exists, _}}, bf_tsdb:create("test_db", ?SCHEMA))
+      %% ?_assertMatch("../scripts", ec_util:scripts_dir()),
+      %% ?_assertMatch("../config", ec_util:config_dir()),
+     ]}.
 
 

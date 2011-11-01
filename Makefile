@@ -11,6 +11,7 @@ clean:
 
 test: all
 	cp -r etc .eunit/.
+	rm -rf db/test_db*
 	rebar skip_deps=true eunit
 
 doc:
@@ -18,14 +19,14 @@ doc:
 
 rel: all
 	rebar generate
-	chmod u+x rel/bf_bot/bin/bf_bot
+	chmod u+x rel/bf_tsdb/bin/bf_tsdb
 
 relclean:
-	rm -rf rel/bf_gateway
+	rm -rf rel/bf_tsdb
 
 APPS = kernel stdlib sasl erts ssl tools os_mon runtime_tools crypto inets \
 xmerl snmp public_key mnesia eunit syntax_tools compiler
-COMBO_PLT = $(HOME)/.bf_gateway_dialyzer_plt
+COMBO_PLT = $(HOME)/.bf_tsdb_dialyzer_plt
 
 check_plt: compile
 	dialyzer --check_plt --plt $(COMBO_PLT) --apps $(APPS) \
