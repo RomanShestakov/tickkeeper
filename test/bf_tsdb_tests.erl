@@ -29,9 +29,8 @@ run(_P) ->
      [
       ?_assertMatch(ok, bf_tsdb:create("test_db", ?SCHEMA)),
       ?_assertMatch({error, db_already_exists}, bf_tsdb:create("test_db", ?SCHEMA)),
-      ?_assertMatch({error, db_already_open}, bf_tsdb:open("test_db"))
-      %% ?_assertMatch("../scripts", ec_util:scripts_dir()),
-      %% ?_assertMatch("../config", ec_util:config_dir()),
+      ?_assertMatch({error, db_already_open}, bf_tsdb:open("test_db")),
+      ?_assertMatch({error,{db_not_exist, _}}, bf_tsdb:open("test_db1"))
      ]}.
 
 
