@@ -147,7 +147,7 @@ handle_info(_Info, State) ->
 %% The return value is ignored.
 %%--------------------------------------------------------------------
 terminate(_Reason, State) ->
-    [ bf_tsdb_storage:close(Fd) || {_Name, Fd} <- State#state.open_db],
+    [bf_tsdb_storage:close(Fd) || {_Name, Fd} <- State#state.open_db],
     ok.
 
 %%--------------------------------------------------------------------
@@ -162,3 +162,4 @@ code_change(_OldVsn, State, _Extra) ->
 %%--------------------------------------------------------------------
 db_full_name(Db_Root, Name) ->
     filename:join(Db_Root, Name).
+

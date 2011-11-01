@@ -8,14 +8,22 @@
 
 -compile(export_all).
 
-
+ 
+-type io_device() :: file:io_device().
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% create a new database and head file
+%% @end
+%%--------------------------------------------------------------------
+-spec create(string(), list()) -> {ok, io_device()} | {error, any()}.
 create(FullName, Schema) ->
-    case filelib:is_regular(FullName) of
+    case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
 	true -> {error, {db_already_exists, FullName}};
 	false ->
 	    %% convert schema to format used by db
 	    ConvertedSchema = convert_schema(Schema),
-	    %% same schema into head file
+	    %% save schema into head file
 	    unconsult(FullName ++ ".head", [ConvertedSchema]),
 	    %% open db
 	    open(FullName)
@@ -60,9 +68,11 @@ expression(Schema) ->
     "parse_bin(Bin) -> [ " ++ Vars ++ " || " ++ Pre ++ " <= " ++ "Bin ].". 
 
 
-%%
-%% return schema
-%%
+%%--------------------------------------------------------------------
+%% @doc
+%% read schema file and return schema definition
+%% @end
+%%--------------------------------------------------------------------
 -spec read_schema(string()) -> {schema, []} | no_return.
 read_schema(FileName) ->
     SchemaFile =  FileName ++ ".head",
@@ -71,8 +81,17 @@ read_schema(FileName) ->
 	{error, _Reason} -> throw({schema_not_exist, SchemaFile})
     end.
     
-
-%%Schema = [{timestamp, integer}, {bid, float}, {ask, float}],
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% convert schema from user defined , e.g. [{timestamp, integer}, {bid, float}, {ask, float}]
+%% to db schema .e.g.
+%% {schema,[{field,{id,0},{name,"timestamp"},{type,integer}},
+%%          {field,{id,1},{name,"bid"},{type,float}},
+%%          {field,{id,2},{name,"ask"},{type,float}}]}.
+%% @end
+%%--------------------------------------------------------------------
+-spec convert_schema(list()) -> {schema, list()}.
 convert_schema(Schema) ->
     convert_schema(Schema, 0, []).
 convert_schema([], _Count, Acc) ->
@@ -80,11 +99,15 @@ convert_schema([], _Count, Acc) ->
 convert_schema([{Name, Type} | T], Count, Acc) ->	     
     convert_schema(T, Count + 1, [{field, {id, Count}, {name, Name}, {type, Type}} | Acc]).
     
-
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% save erlang terms into file. from Programming Erlang book p.228
+%% @end
+%%--------------------------------------------------------------------
+-spec unconsult(string(), any()) -> ok | {error, any()}.
 unconsult(File, L) ->
     {ok, S} = file:open(File, write),
     lists:foreach(fun(X) -> io:format(S, "~p.~n", [X]) end, L),
     file:close(S).
-
-
 			   
