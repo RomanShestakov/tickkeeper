@@ -30,7 +30,9 @@ run(_P) ->
       ?_assertMatch(ok, bf_tsdb:create("test_db", ?SCHEMA)),
       ?_assertMatch({error, db_already_exists}, bf_tsdb:create("test_db", ?SCHEMA)),
       ?_assertMatch({error, db_already_open}, bf_tsdb:open("test_db")),
-      ?_assertMatch({error,{db_not_exist, _}}, bf_tsdb:open("test_db1"))
+      ?_assertMatch({error,{db_not_exist, _}}, bf_tsdb:open("test_db1")),
+      ?_assertMatch(ok, bf_tsdb:close("test_db")),
+      ?_assertMatch({error, db_not_open}, bf_tsdb:close("test_db"))
      ]}.
 
 

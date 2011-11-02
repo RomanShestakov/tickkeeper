@@ -51,9 +51,15 @@ read(FileName) ->
     {ok, Bin} = file:read_file(FileName),
     {ok, ParseFunc(Bin)}.
 
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% close open db
+%% @end
+%%--------------------------------------------------------------------
+-spec close(io_device()) -> ok | {error, any()}.
 close(Fd) ->
     file:close(Fd).
-
 
 get_parse_func(Schema) ->
     M1 = smerl:new(tsdb_bin_parse),

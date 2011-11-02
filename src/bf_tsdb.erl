@@ -102,7 +102,7 @@ handle_call({close, Name}, _From, State) ->
 	    {reply, Result, State#state{open_db = proplists:delete(Name, State#state.open_db)}};
 	none ->
 	    log4erl:error("db ~p is not open", [Name]),    
-	    {reply, error_db_not_open, State}
+	    {reply, {error, db_not_open}, State}
     end;
 handle_call({read, Name}, _From, State) ->
     %%Schema = [{timestamp, integer}, {bid, float}, {ask, float}],
