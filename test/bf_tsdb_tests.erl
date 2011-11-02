@@ -4,7 +4,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
--define(SCHEMA, [{timestamp, integer}, {bid, float}, {ask, float}]).
+-define(SCHEMA, [{"timestamp", integer}, {"bid", float}, {"ask", float}]).
 
 
 process_test_() ->

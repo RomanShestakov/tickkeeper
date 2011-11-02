@@ -78,8 +78,8 @@ init([]) ->
 %%--------------------------------------------------------------------
 handle_call({create, Name, Schema}, _From, State) ->
     case bf_tsdb_storage:create(db_full_name(State#state.tsdb_root, Name), Schema) of
-	{ok, Fd} ->
-	    {reply, ok, State#state{open_db = [{Name, Fd} | State#state.open_db]}};
+	{ok, Fd, PickleFunc, UnpickleFunc} ->
+	    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
 	{error, Reason} ->
 	    {reply, {error, Reason}, State}
     end;
@@ -89,19 +89,18 @@ handle_call({open, Name}, _From, State) ->
 	    {reply, {error, db_already_open}, State};
 	none ->
 	    case bf_tsdb_storage:open(db_full_name(State#state.tsdb_root, Name)) of
-		{ok, Fd} ->
-		    {reply, ok, State#state{open_db = [{Name, Fd} | State#state.open_db]}};
+		{ok, {Fd, PickleFunc, UnpickleFunc}} ->
+		    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
 		{error, Reason} ->
 		    {reply, {error, Reason}, State}
 	    end
     end;
 handle_call({close, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
-	{Name, Fd} -> 
+	{Name, {Fd, _PickleFunc, _UnpickleFunc}} -> 
 	    Result = bf_tsdb_storage:close(Fd),
 	    {reply, Result, State#state{open_db = proplists:delete(Name, State#state.open_db)}};
 	none ->
-	    log4erl:error("db ~p is not open", [Name]),    
 	    {reply, {error, db_not_open}, State}
     end;
 handle_call({read, Name}, _From, State) ->
@@ -110,7 +109,6 @@ handle_call({read, Name}, _From, State) ->
 	{ok, Curve} -> 
 	    {reply, Curve, State};
 	{error, Reason} ->
-	    log4erl:error("cant' read db: ~p, ~p", [Name, Reason]),    
 	    {reply, {error, Reason}, State}
     end;
 handle_call(_Request, _From, State) ->
@@ -125,7 +123,7 @@ handle_call(_Request, _From, State) ->
 %%--------------------------------------------------------------------
 handle_cast({append, Data, Name}, State) ->
     case proplists:lookup(Name, State#state.open_db) of
-	{Name, Fd} -> 
+	{Name, {Fd, _PickleFunc}} -> 
 	    bf_tsdb_storage:append(Data, Fd, [{timestamp, integer}, {bid, float}, {ask, float}]),
 	    {noreply, State};    
 	none -> 
