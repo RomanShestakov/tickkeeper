@@ -51,8 +51,8 @@ close(Name) ->
 read(Name) ->
     gen_server:call({global, ?SERVER}, {read, Name}).
 
-append(Tick, Name) ->
-    gen_server:cast({global, ?SERVER}, {append, Tick, Name}).
+append(Name, Tick) ->
+    gen_server:cast({global, ?SERVER}, {append, Name, Tick}).
 
 %%--------------------------------------------------------------------
 %% Function: init(Args) -> {ok, State} |
@@ -104,12 +104,17 @@ handle_call({close, Name}, _From, State) ->
 	    {reply, {error, db_not_open}, State}
     end;
 handle_call({read, Name}, _From, State) ->
-    %%Schema = [{timestamp, integer}, {bid, float}, {ask, float}],
-    case bf_tsdb_storage:read(db_full_name(State#state.tsdb_root, Name)) of
-	{ok, Curve} -> 
-	    {reply, Curve, State};
-	{error, Reason} ->
-	    {reply, {error, Reason}, State}
+    FullName = db_full_name(State#state.tsdb_root, Name),
+    case proplists:lookup(Name, State#state.open_db) of
+	{Name, {_Fd, _PickleFunc, UnpickleFunc}} -> 
+    	    case bf_tsdb_storage:read(FullName, UnpickleFunc) of
+		{ok, Curve} -> 
+		    {reply, Curve, State};
+		{error, Reason} ->
+		    {reply, {error, Reason}, State}
+	    end;
+	none ->
+	    {reply, {error, db_not_open}, State}
     end;
 handle_call(_Request, _From, State) ->
     Reply = ok,
@@ -121,10 +126,10 @@ handle_call(_Request, _From, State) ->
 %%                                      {stop, Reason, State}
 %% Description: Handling cast messages
 %%--------------------------------------------------------------------
-handle_cast({append, Data, Name}, State) ->
+handle_cast({append, Name, Data}, State) ->
     case proplists:lookup(Name, State#state.open_db) of
-	{Name, {Fd, _PickleFunc}} -> 
-	    bf_tsdb_storage:append(Data, Fd, [{timestamp, integer}, {bid, float}, {ask, float}]),
+	{Name, {Fd, PickleFunc, _UnpickleFunc}} -> 
+	    bf_tsdb_storage:append(Data, Fd, PickleFunc),
 	    {noreply, State};    
 	none -> 
  	    log4erl:error("cant' add tick as db ~p is not open", [Name]),    

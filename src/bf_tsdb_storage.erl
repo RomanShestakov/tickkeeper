@@ -4,7 +4,7 @@
 	 open/1,
 	 close/1,
 	 append/3,
-	 read/1]).
+	 read/2]).
 
 -compile(export_all).
 
@@ -61,14 +61,14 @@ open(FullName) ->
 	false -> {error, {db_not_exist, FullName}}
     end.
 	    
-append(Record, Fd, _Schema) ->
-    file:write(Fd, Record).
+append(Record, Fd, PickleFunc) ->
+    Bin = PickleFunc(Record),
+    file:write(Fd, Bin).
 
-read(FileName) ->
-    Schema = [].
+read(FileName, UnpickleFunc) ->
    %%  ParseFunc = get_parse_func(Schema),
-%%     {ok, Bin} = file:read_file(FileName),
-%%     {ok, ParseFunc(Bin)}.
+     {ok, Bin} = file:read_file(FileName),
+     {ok, UnpickleFunc(Bin)}.
 
  
 %%--------------------------------------------------------------------

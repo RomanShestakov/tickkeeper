@@ -11,7 +11,8 @@ tick() ->
     T = calendar:datetime_to_gregorian_seconds(calendar:now_to_datetime(now())),
     B = 3.15,
     L = 3.13,
-    <<T/integer, B/float, L/float>>.
+    {T, B, L}.
+    %<<T/integer, B/float, L/float>>.
     
 
 open(Name) ->
