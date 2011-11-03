@@ -127,7 +127,8 @@ pickle_expression({schema, Fields}) ->
     Name_Type = [{Name, Type} || {field, _Id, {name, Name}, {type, Type}} <- SortedFields],
     Keys = [string:to_upper(K) || {K,_T} <- Name_Type],
     Vars = "{" ++ string:join(Keys, ",") ++ "}",
-    Pre = "<<" ++ string:join([string:to_upper(Name) ++ "/" ++ atom_to_list(Type) || {Name, Type} <- Name_Type], ", ") ++ ">>",
+    Pre = "<<" ++ string:join([string:to_upper(Name) ++ ":" ++ integer_to_list(Size) ++ "/" ++ atom_to_list(Type1) ||
+				  {Name, {Type1, Size}} <- Name_Type], ", ") ++ ">>",
     "pickle(" ++ Vars ++ ") -> " ++ Pre ++ ".".
 
 %%--------------------------------------------------------------------
@@ -144,7 +145,8 @@ unpickle_expression({schema, Fields}) ->
     Name_Type = [{Name, Type} || {field, _Id, {name, Name}, {type, Type}} <- SortedFields],
     Keys = [string:to_upper(K) || {K,_T} <- Name_Type],
     Vars = "{" ++ string:join(Keys, ",") ++ "}",
-    Pre = "<<" ++ string:join([string:to_upper(Name) ++ "/" ++ atom_to_list(Type) || {Name, Type} <- Name_Type], ", ") ++ ">>",
+    Pre = "<<" ++ string:join([string:to_upper(Name) ++ ":" ++ integer_to_list(Size) ++ "/" ++ atom_to_list(Type1)
+			       || {Name, {Type1, Size}} <- Name_Type], ", ") ++ ">>",
     "unpickle(Bin) -> [ " ++ Vars ++ " || " ++ Pre ++ " <= " ++ "Bin ].".
     
     

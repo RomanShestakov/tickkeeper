@@ -7,8 +7,8 @@
 -define(LONG, 32/unsigned-little-integer).
 -define(DOUBLE, 64/unsigned-little-integer).
 
--define(SCHEMA, [{"timestamp", 64}, {"bid", 64}, {"ask", 64}]).
--define(SCHEMA1, [{"timestamp", integer}, {"name", integer}, {"bid", float}, {"ask", float}]).
+-define(SCHEMA, [{"timestamp", {integer, 64}}, {"bid", {float, 64}}, {"ask", {float,64}}]).
+-define(SCHEMA1, [{"timestamp", {integer,64}}, {"name", {float,64}}, {"bid", {float, 64}}, {"ask", {float,64}}]).
 
 process_test_() ->
     {setup, local,
