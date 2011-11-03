@@ -80,19 +80,16 @@ handle_call({create, Name, Schema}, _From, State) ->
     case bf_tsdb_storage:create(db_full_name(State#state.tsdb_root, Name), Schema) of
 	{ok, Fd, PickleFunc, UnpickleFunc} ->
 	    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
-	{error, Reason} ->
-	    {reply, {error, Reason}, State}
+	{error, Reason} -> {reply, {error, Reason}, State}
     end;
 handle_call({open, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
-	{Name, _Fd} ->
-	    {reply, {error, db_already_open}, State};
+	{Name, _Fd} -> {reply, {error, db_already_open}, State};
 	none ->
 	    case bf_tsdb_storage:open(db_full_name(State#state.tsdb_root, Name)) of
-		{ok, {Fd, PickleFunc, UnpickleFunc}} ->
+		{ok, Fd, PickleFunc, UnpickleFunc} ->
 		    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
-		{error, Reason} ->
-		    {reply, {error, Reason}, State}
+		{error, Reason} -> {reply, {error, Reason}, State}
 	    end
     end;
 handle_call({close, Name}, _From, State) ->
@@ -108,13 +105,10 @@ handle_call({read, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
 	{Name, {_Fd, _PickleFunc, UnpickleFunc}} -> 
     	    case bf_tsdb_storage:read(FullName, UnpickleFunc) of
-		{ok, Curve} -> 
-		    {reply, Curve, State};
-		{error, Reason} ->
-		    {reply, {error, Reason}, State}
+		{ok, Curve} -> {reply, Curve, State};
+		{error, Reason} -> {reply, {error, Reason}, State}
 	    end;
-	none ->
-	    {reply, {error, db_not_open}, State}
+	none -> {reply, {error, db_not_open}, State}
     end;
 handle_call(_Request, _From, State) ->
     Reply = ok,

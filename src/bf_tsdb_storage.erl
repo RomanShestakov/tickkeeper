@@ -7,7 +7,6 @@
 	 read/2]).
 
 -compile(export_all).
-
  
 -type io_device() :: file:io_device().
  
@@ -48,15 +47,18 @@ open(FullName) ->
     case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
 	true ->
 	    %% first open schema
-	    ConvertedSchema = file:consult(FullName ++ ".head"),
-	    try
-		{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
-		case file:open(FullName, [read, append, binary, delayed_write, read_ahead]) of
-		    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
-		    {error, Reason} -> {error, Reason}
-		end
-	    catch
-		throw:{smerl_error, Err} -> {error, Err}
+	    case file:consult(FullName ++ ".head") of
+		{ok, [ConvertedSchema]} ->
+		    try
+			{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
+			case file:open(FullName, [read, append, binary, delayed_write, read_ahead]) of
+			    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
+			    {error, Reason} -> {error, Reason}
+			end
+		    catch
+			throw:{smerl_error, Err} -> {error, Err}
+		    end;
+		{error, Err} -> throw({error, Err})
 	    end;
 	false -> {error, {db_not_exist, FullName}}
     end.
@@ -70,7 +72,7 @@ read(FileName, UnpickleFunc) ->
      {ok, Bin} = file:read_file(FileName),
      {ok, UnpickleFunc(Bin)}.
 
- 
+
 %%--------------------------------------------------------------------
 %% @doc
 %% close open db
@@ -79,17 +81,28 @@ read(FileName, UnpickleFunc) ->
 -spec close(io_device()) -> ok | {error, any()}.
 close(Fd) ->
     file:close(Fd).
-
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% create pickle/unpickle functions for a given schema
+%% @end
+%%--------------------------------------------------------------------
+-spec get_pickle_unpickle_func({schema, []}) -> {ok, fun(), fun()} | no_return().
 get_pickle_unpickle_func(Schema) ->
     M1 = smerl:new(tsdb_pickle_fns),
     PickleFunc = pickle_expression(Schema),
     UnpickleFunc = unpickle_expression(Schema),
-    io:format("parse expressions: ~p : ~p ~n", [PickleFunc, UnpickleFunc]),
+    log4erl:debug("parse expressions: ~p : ~p", [PickleFunc, UnpickleFunc]),
     {ok, M2} = compile_func(M1, PickleFunc),
     {ok, _M3} = compile_func(M2, UnpickleFunc),
     {ok, fun(Bin) -> tsdb_pickle_fns:pickle(Bin) end, fun(Bin) -> tsdb_pickle_fns:unpickle(Bin) end}.
 
-
+%%--------------------------------------------------------------------
+%% @doc
+%% compile function expression 
+%% @end
+%%--------------------------------------------------------------------
+-spec compile_func(record(), string()) -> {ok, record()} | no_return().
 compile_func(M, Expr) ->
     case smerl:add_func(M, Expr) of
 	{ok, M2} -> 
@@ -148,7 +161,6 @@ read_schema(FileName) ->
 	{error, _Reason} -> throw({schema_not_exist, SchemaFile})
     end.
     
- 
 %%--------------------------------------------------------------------
 %% @doc
 %% convert schema from user defined , e.g. [{timestamp, integer}, {bid, float}, {ask, float}]
