@@ -52,7 +52,7 @@ read(Name) ->
     gen_server:call({global, ?SERVER}, {read, Name}).
 
 append(Name, Tick) ->
-    gen_server:cast({global, ?SERVER}, {append, Name, Tick}).
+    gen_server:call({global, ?SERVER}, {append, Name, Tick}).
 
 %%--------------------------------------------------------------------
 %% Function: init(Args) -> {ok, State} |
@@ -100,6 +100,17 @@ handle_call({close, Name}, _From, State) ->
 	none ->
 	    {reply, {error, db_not_open}, State}
     end;
+handle_call({append, Name, Data}, _From, State) ->
+    case proplists:lookup(Name, State#state.open_db) of
+	{Name, {Fd, PickleFunc, _UnpickleFunc}} -> 
+	    case bf_tsdb_storage:append(Data, Fd, PickleFunc) of
+		ok -> {reply, ok, State};
+		{error, Err} -> {reply, {error, Err}, State}
+	    end;
+	none -> 
+ 	    log4erl:error("cant' add tick as db ~p is not open", [Name]),
+	    {reply, error_db_not_open, State}
+    end;
 handle_call({read, Name}, _From, State) ->
     FullName = db_full_name(State#state.tsdb_root, Name),
     case proplists:lookup(Name, State#state.open_db) of
@@ -120,15 +131,18 @@ handle_call(_Request, _From, State) ->
 %%                                      {stop, Reason, State}
 %% Description: Handling cast messages
 %%--------------------------------------------------------------------
-handle_cast({append, Name, Data}, State) ->
-    case proplists:lookup(Name, State#state.open_db) of
-	{Name, {Fd, PickleFunc, _UnpickleFunc}} -> 
-	    bf_tsdb_storage:append(Data, Fd, PickleFunc),
-	    {noreply, State};    
-	none -> 
- 	    log4erl:error("cant' add tick as db ~p is not open", [Name]),    
-	    {noreply, State}
-    end;
+%% handle_cast({append, Name, Data}, State) ->
+%%     case proplists:lookup(Name, State#state.open_db) of
+%% 	{Name, {Fd, PickleFunc, _UnpickleFunc}} -> 
+%% 	    case bf_tsdb_storage:append(Data, Fd, PickleFunc) of
+%% 		ok -> ok;
+%% 		{error, Err} -> log4erl:error("can't add tick ~p, ~p", [Data, Err])
+%% 	    end,
+%% 	    {noreply, State};    
+%% 	none -> 
+%%  	    log4erl:error("cant' add tick as db ~p is not open", [Name]),    
+%% 	    {noreply, State}
+%%     end;
 handle_cast(_Msg, State) ->
     {noreply, State}.
 

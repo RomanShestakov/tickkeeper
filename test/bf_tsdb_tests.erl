@@ -9,6 +9,8 @@
 
 -define(SCHEMA, [{"timestamp", {integer, 64}}, {"bid", {float, 64}}, {"ask", {float,64}}]).
 -define(SCHEMA1, [{"timestamp", {integer,64}}, {"name", {float,64}}, {"bid", {float, 64}}, {"ask", {float,64}}]).
+-define(TEST_TICK, {100001, 3.1345, 3.14567}).
+
 
 process_test_() ->
     {setup, local,
@@ -35,9 +37,10 @@ run(_P) ->
       ?_assertMatch({error, db_already_open}, bf_tsdb:open("test_db")),
       ?_assertMatch({error,{db_not_exist, _}}, bf_tsdb:open("test_db1")),
       %% test append / read
-      ?_assertMatch(ok, bf_tsdb:append("test_db", test_tick())),
-      %%?_assertMatch({ok, _C}, bf_tsdb:read("test_db")),
+      ?_assertMatch([ok, ok, ok], [bf_tsdb:append("test_db", T) || T <- [?TEST_TICK, ?TEST_TICK, ?TEST_TICK]]),
+      ?_assertMatch([?TEST_TICK, ?TEST_TICK, ?TEST_TICK], bf_tsdb:read("test_db")),
       ?_assertMatch(ok, bf_tsdb:create("test_db1", ?SCHEMA1)),
+      ?_assertMatch({error, _E}, bf_tsdb:append("test_db1", ?TEST_TICK)),
       ?_assertMatch(ok, bf_tsdb:close("test_db")),
       ?_assertMatch(ok, bf_tsdb:close("test_db1")),
       ?_assertMatch({error, db_not_open}, bf_tsdb:close("test_db")),

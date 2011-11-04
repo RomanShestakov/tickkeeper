@@ -6,7 +6,7 @@
 	 append/3,
 	 read/2]).
 
--compile(export_all).
+%%-compile(export_all).
  
 -type io_device() :: file:io_device().
  
@@ -27,7 +27,7 @@ create(FullName, Schema) ->
 	    %% get pickle/unpickle functions
 	    try
 		{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
-		case file:open(FullName, [read, append, binary, delayed_write, read_ahead]) of
+		case file:open(FullName, [read, append, binary, read_ahead]) of
 		    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
 		    {error, Reason} -> {error, Reason}
 		end
@@ -46,33 +46,62 @@ open(FullName) ->
     %% db must already exist
     case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
 	true ->
-	    %% first open schema
-	    case file:consult(FullName ++ ".head") of
-		{ok, [ConvertedSchema]} ->
-		    try
-			{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
-			case file:open(FullName, [read, append, binary, delayed_write, read_ahead]) of
-			    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
-			    {error, Reason} -> {error, Reason}
-			end
-		    catch
-			throw:{smerl_error, Err} -> {error, Err}
-		    end;
-		{error, Err} -> throw({error, Err})
+	    try
+		ConvertedSchema = read_schema(FullName),
+		{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
+		case file:open(FullName, [read, append, binary, read_ahead]) of
+		    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
+		    {error, Reason} -> {error, Reason}
+		end
+	    catch
+		throw:{smerl_error, Err} -> {error, Err};
+		throw:{schema_not_exist, File} -> {error, {schema_not_exist, File}}
 	    end;
 	false -> {error, {db_not_exist, FullName}}
     end.
 	    
-append(Record, Fd, PickleFunc) ->
-    Bin = PickleFunc(Record),
-    file:write(Fd, Bin).
+%%--------------------------------------------------------------------
+%% @doc
+%% read schema file and return schema definition
+%% @end
+%%--------------------------------------------------------------------
+-spec read_schema(string()) -> {schema, []} | no_return.
+read_schema(FileName) ->
+    SchemaFile = FileName ++ ".head",
+    case file:consult(SchemaFile) of
+	{ok, [Schema]} -> Schema;
+	{error, _Reason} -> throw({schema_not_exist, SchemaFile})
+    end.
 
+ 
+%%--------------------------------------------------------------------
+%% @doc
+%% append tick to the end of the db. 
+%% @end
+%%--------------------------------------------------------------------
+-spec append(tuple(), io_device(), fun()) -> ok | {error, any()}.
+append(Data, Fd, PickleFunc) ->
+    try
+	Bin = PickleFunc(Data),
+	file:write(Fd, Bin)
+    catch
+	_:Reason -> {error, {cant_append_tick, Reason}}
+    end.
+	    
+%%--------------------------------------------------------------------
+%% @doc
+%% read entire curve from db.
+%% @end
+%%--------------------------------------------------------------------
+-spec read(string(), fun()) -> ok | {error, {cant_read_from_db, string(), any()}}.
 read(FileName, UnpickleFunc) ->
-   %%  ParseFunc = get_parse_func(Schema),
-     {ok, Bin} = file:read_file(FileName),
-     {ok, UnpickleFunc(Bin)}.
-
-
+    try
+	{ok, Bin} = file:read_file(FileName),
+	{ok, UnpickleFunc(Bin)}
+    catch
+	_:Reason -> {error, {cant_read_from_db, FileName, Reason}}
+    end.
+	    
 %%--------------------------------------------------------------------
 %% @doc
 %% close open db
@@ -150,18 +179,6 @@ unpickle_expression({schema, Fields}) ->
     "unpickle(Bin) -> [ " ++ Vars ++ " || " ++ Pre ++ " <= " ++ "Bin ].".
     
     
-%%--------------------------------------------------------------------
-%% @doc
-%% read schema file and return schema definition
-%% @end
-%%--------------------------------------------------------------------
--spec read_schema(string()) -> {schema, []} | no_return.
-read_schema(FileName) ->
-    SchemaFile =  FileName ++ ".head",
-    case file:consult(SchemaFile) of
-	{ok, [Schema]} -> Schema;
-	{error, _Reason} -> throw({schema_not_exist, SchemaFile})
-    end.
     
 %%--------------------------------------------------------------------
 %% @doc
