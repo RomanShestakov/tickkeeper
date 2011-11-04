@@ -1,11 +1,24 @@
-%%%-------------------------------------------------------------------
-%%% File    : bf_tsdb.erl
-%%% Author  : Roman Shestakov <>
-%%% Description : 
+%% Copyright (C) 2011 Roman Shestakov
 %%%
-%%% Created : 29 Oct 2011 by Roman Shestakov <>
-%%%-------------------------------------------------------------------
--module(bf_tsdb).
+%%% This file is part of tickkeeper
+%%%
+%%% tickkeeper is free software: you can redistribute it and/or modify
+%%% it under the terms of the GNU Lesser General Public License as 
+%%% published by the Free Software Foundation, either version 3 of 
+%%% the License, or (at your option) any later version.
+%%%
+%%% tickkeeper is distributed in the hope that it will be useful,
+%%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%%% GNU Lesser General Public License for more details.
+%%%
+%%% You should have received a copy of the GNU Lesser General Public 
+%%% License along with Erlsom.  If not, see 
+%%% <http://www.gnu.org/licenses/>.
+%%%
+%%% Author contact: romanshestakov@yahoo.co.uk
+
+-module(tk_core).
 
 -behaviour(gen_server).
 
@@ -23,7 +36,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
 	 terminate/2, code_change/3]).
 
--record(state, {tsdb_root, open_db = []}).
+-record(state, {tk_root, open_db = []}).
 
 %%====================================================================
 %% API
@@ -63,9 +76,9 @@ append(Name, Tick) ->
 %%--------------------------------------------------------------------
 init([]) ->
     process_flag(trap_exit, true),
-    TSDB_Root = bf_tsdb_util:tsdb_root(),
-    log4erl:info("tsdb root: ~p", [TSDB_Root]),    
-    {ok, #state{tsdb_root = TSDB_Root}}.
+    TK_Root = tk_util:tk_root(),
+    log4erl:info("tickkeeper root: ~p", [TK_Root]),    
+    {ok, #state{tk_root = TK_Root}}.
 
 %%--------------------------------------------------------------------
 %% Function: %% handle_call(Request, From, State) -> {reply, Reply, State} |
@@ -77,7 +90,7 @@ init([]) ->
 %% Description: Handling call messages
 %%--------------------------------------------------------------------
 handle_call({create, Name, Schema}, _From, State) ->
-    case bf_tsdb_storage:create(db_full_name(State#state.tsdb_root, Name), Schema) of
+    case tk_storage:create(db_full_name(State#state.tk_root, Name), Schema) of
 	{ok, Fd, PickleFunc, UnpickleFunc} ->
 	    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
 	{error, Reason} -> {reply, {error, Reason}, State}
@@ -86,7 +99,7 @@ handle_call({open, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
 	{Name, _Fd} -> {reply, {error, db_already_open}, State};
 	none ->
-	    case bf_tsdb_storage:open(db_full_name(State#state.tsdb_root, Name)) of
+	    case tk_storage:open(db_full_name(State#state.tk_root, Name)) of
 		{ok, Fd, PickleFunc, UnpickleFunc} ->
 		    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
 		{error, Reason} -> {reply, {error, Reason}, State}
@@ -95,7 +108,7 @@ handle_call({open, Name}, _From, State) ->
 handle_call({close, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
 	{Name, {Fd, _PickleFunc, _UnpickleFunc}} -> 
-	    Result = bf_tsdb_storage:close(Fd),
+	    Result = tk_storage:close(Fd),
 	    {reply, Result, State#state{open_db = proplists:delete(Name, State#state.open_db)}};
 	none ->
 	    {reply, {error, db_not_open}, State}
@@ -103,19 +116,19 @@ handle_call({close, Name}, _From, State) ->
 handle_call({append, Name, Data}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
 	{Name, {Fd, PickleFunc, _UnpickleFunc}} -> 
-	    case bf_tsdb_storage:append(Data, Fd, PickleFunc) of
+	    case tk_storage:append(Data, Fd, PickleFunc) of
 		ok -> {reply, ok, State};
 		{error, Err} -> {reply, {error, Err}, State}
 	    end;
 	none -> 
  	    log4erl:error("cant' add tick as db ~p is not open", [Name]),
-	    {reply, error_db_not_open, State}
+	    {reply, {error, db_not_open}, State}
     end;
 handle_call({read, Name}, _From, State) ->
-    FullName = db_full_name(State#state.tsdb_root, Name),
+    FullName = db_full_name(State#state.tk_root, Name),
     case proplists:lookup(Name, State#state.open_db) of
 	{Name, {_Fd, _PickleFunc, UnpickleFunc}} -> 
-    	    case bf_tsdb_storage:read(FullName, UnpickleFunc) of
+    	    case tk_storage:read(FullName, UnpickleFunc) of
 		{ok, Curve} -> {reply, Curve, State};
 		{error, Reason} -> {reply, {error, Reason}, State}
 	    end;
@@ -163,7 +176,7 @@ handle_info(_Info, State) ->
 %% The return value is ignored.
 %%--------------------------------------------------------------------
 terminate(_Reason, State) ->
-    [bf_tsdb_storage:close(Fd) || {_Name, Fd} <- State#state.open_db],
+    [tk_storage:close(Fd) || {_Name, Fd} <- State#state.open_db],
     ok.
 
 %%--------------------------------------------------------------------

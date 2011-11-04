@@ -1,4 +1,4 @@
-{application, bf_tsdb,
+{application, tickkeeper,
  [
   {description, ""},
   {vsn, "1"},
@@ -7,9 +7,9 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, { bf_tsdb_app, []}},
+  {mod, { tk_app, []}},
   {env, [
 	 {log4erl_config, "etc/log4erl.conf"},
-	 {tsdb_root, "/Users/romanshestakov/Development/bf_tsdb/db"}
+	 {tk_root, "/Users/romanshestakov/Development/tickkeeper/db"}
   ]}
  ]}.
