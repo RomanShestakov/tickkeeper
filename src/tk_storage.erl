@@ -20,6 +20,8 @@
 
 -module(tk_storage).
 
+-compile(export_all).
+
 -export([create/2,
 	 open/1,
 	 close/1,
@@ -27,30 +29,25 @@
 	 read/2]).
 
 -type io_device() :: file:io_device().
- 
+-type name() :: file:name(). 
 %%--------------------------------------------------------------------
 %% @doc
 %% create a new database and head file
 %% @end
 %%--------------------------------------------------------------------
--spec create(string(), list()) -> {ok, io_device(), fun(), fun()} | {error, any()}.
+-spec create(name(), list()) -> {ok, io_device(), fun(), fun()} | no_return().
 create(FullName, Schema) ->
-    case filelib:is_regular(FullName) orelse filelib:is_regular(FullName ++ ".head") of
-	true -> {error, db_already_exists};
+    SchemaFile = FullName ++ ".head",
+    case filelib:is_regular(FullName) orelse filelib:is_regular(SchemaFile) of
+	true -> throw({error, db_already_exists});
 	false ->
-	    %% convert schema to format used by db
 	    ConvertedSchema = convert_schema(Schema),
 	    %% save schema into head file
-	    unconsult(FullName ++ ".head", [ConvertedSchema]),
-	    %% get pickle/unpickle functions
-	    try
-		{ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
-		case file:open(FullName, [read, append, binary, read_ahead]) of
-		    {ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
-		    {error, Reason} -> {error, Reason}
-		end
-	    catch
-		throw:{smerl_error, Err} -> {error, Err}
+	    unconsult(SchemaFile, [ConvertedSchema]),
+	    {ok, PickleFunc, UnpickleFunc} = get_pickle_unpickle_func(ConvertedSchema),
+	    case file:open(FullName, [read, append, binary, read_ahead]) of
+		{ok, Fd} -> {ok, Fd, PickleFunc, UnpickleFunc}; 
+		{error, Reason} -> throw({error, {cannot_open_file, FullName, Reason}})
 	    end
     end.
 
@@ -114,7 +111,7 @@ append(Data, Fd, PickleFunc) ->
 %% read entire curve from db.
 %% @end
 %%--------------------------------------------------------------------
--spec read(string(), fun()) -> ok | {error, {cant_read_from_db, string(), any()}}.
+-spec read(string(), fun()) -> {ok, []} | {error, {cant_read_from_db, string(), any()}}.
 read(FileName, UnpickleFunc) ->
     try
 	{ok, Bin} = file:read_file(FileName),
@@ -142,7 +139,7 @@ get_pickle_unpickle_func(Schema) ->
     M1 = smerl:new(tsdb_pickle_fns),
     PickleFunc = pickle_expression(Schema),
     UnpickleFunc = unpickle_expression(Schema),
-    log4erl:debug("parse expressions: ~p : ~p", [PickleFunc, UnpickleFunc]),
+    %log4erl:debug("parse expressions: ~p : ~p", [PickleFunc, UnpickleFunc]),
     {ok, M2} = compile_func(M1, PickleFunc),
     {ok, _M3} = compile_func(M2, UnpickleFunc),
     {ok, fun(Bin) -> tsdb_pickle_fns:pickle(Bin) end, fun(Bin) -> tsdb_pickle_fns:unpickle(Bin) end}.
@@ -152,7 +149,7 @@ get_pickle_unpickle_func(Schema) ->
 %% compile function expression 
 %% @end
 %%--------------------------------------------------------------------
--spec compile_func(record(), string()) -> {ok, record()} | no_return().
+-spec compile_func(tuple(), string()) -> {ok, tuple()} | no_return().
 compile_func(M, Expr) ->
     case smerl:add_func(M, Expr) of
 	{ok, M2} -> 
@@ -224,9 +221,14 @@ convert_schema([{Name, Type} | T], Count, Acc) ->
 %% save erlang terms into file. from Programming Erlang book p.228
 %% @end
 %%--------------------------------------------------------------------
--spec unconsult(string(), any()) -> ok | {error, any()}.
-unconsult(File, L) ->
-    {ok, S} = file:open(File, write),
-    lists:foreach(fun(X) -> io:format(S, "~p.~n", [X]) end, L),
-    file:close(S).
-			   
+-spec unconsult(name(), any()) -> ok | no_return().
+unconsult(FileName, L) ->
+    try
+	{ok, S} = file:open(FileName, [write]),
+	lists:foreach(fun(X) -> io:format(S, "~p.~n", [X]) end, L),
+	ok = file:close(S)
+    catch
+	_:_ -> throw({error, cant_write_to_file, FileName})
+    end.
+	
+

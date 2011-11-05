@@ -1,0 +1,121 @@
+leexinc.hrl:49: The pattern <Rest, Line, {'token', T, Push}, Ts> can never match the type <_,_,'error' | 'skip_token',[{'(',_} | {')',_} | {',',_} | {'<',_} | {'>',_} | {atom(),_,atom() | [any()] | number()}]>
+leexinc.hrl:49: The pattern <Rest, Line, {'token', T, Push}, Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:52: The pattern <Rest, Line, {'end_token', T}, Ts> can never match the type <_,_,'error' | 'skip_token',[{'(',_} | {')',_} | {',',_} | {'<',_} | {'>',_} | {atom(),_,atom() | [any()] | number()}]>
+leexinc.hrl:52: The pattern <Rest, Line, {'end_token', T}, Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:54: The pattern <Rest, Line, {'end_token', T, Push}, Ts> can never match the type <_,_,'error' | 'skip_token',[{'(',_} | {')',_} | {',',_} | {'<',_} | {'>',_} | {atom(),_,atom() | [any()] | number()}]>
+leexinc.hrl:54: The pattern <Rest, Line, {'end_token', T, Push}, Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:57: The pattern <Rest, Line, 'skip_token', Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:59: The pattern <Rest, Line, {'skip_token', Push}, Ts> can never match the type <_,_,'error',[{'(',_} | {')',_} | {',',_} | {'<',_} | {'>',_} | {atom(),_,atom() | [any()] | number()}]>
+leexinc.hrl:59: The pattern <Rest, Line, {'skip_token', Push}, Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:62: The pattern <_Rest, Line, {'error', S}, _Ts> can never match the type <_,_,'error',[{'(',_} | {')',_} | {',',_} | {'<',_} | {'>',_} | {atom(),_,atom() | [any()] | number()}]>
+leexinc.hrl:62: The pattern <_Rest, Line, {'error', S}, _Ts> can never match the type <_,_,'error',[{'+',_} | {'-',_} | {':',_} | {'space',_} | {'time',{_,_,_}} | {atom(),_,atom() | integer()}]>
+leexinc.hrl:118: The pattern <Rest, Line, {'token', T, Push}> can never match the type <_,_,'error' | 'skip_token'>
+leexinc.hrl:118: The pattern <Rest, Line, {'token', T, Push}> can never match the type <_,_,'error'>
+leexinc.hrl:121: The pattern <Rest, Line, {'end_token', T}> can never match the type <_,_,'error' | 'skip_token'>
+leexinc.hrl:121: The pattern <Rest, Line, {'end_token', T}> can never match the type <_,_,'error'>
+leexinc.hrl:123: The pattern <Rest, Line, {'end_token', T, Push}> can never match the type <_,_,'error' | 'skip_token'>
+leexinc.hrl:123: The pattern <Rest, Line, {'end_token', T, Push}> can never match the type <_,_,'error'>
+leexinc.hrl:126: The pattern <Rest, Line, 'skip_token'> can never match the type <_,_,'error'>
+leexinc.hrl:128: The pattern <Rest, Line, {'skip_token', Push}> can never match the type <_,_,'error'>
+leexinc.hrl:131: The pattern <Rest, Line, {'error', S}> can never match the type <_,_,'error'>
+leexinc.hrl:192: The pattern <Rest, Line, {'token', T, Push}, Ts> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:192: The pattern <Rest, Line, {'token', T, Push}, Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:195: The pattern <Rest, Line, {'end_token', T}, Ts> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:195: The pattern <Rest, Line, {'end_token', T}, Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:197: The pattern <Rest, Line, {'end_token', T, Push}, Ts> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:197: The pattern <Rest, Line, {'end_token', T, Push}, Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:200: The pattern <Rest, Line, 'skip_token', Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:202: The pattern <Rest, Line, {'skip_token', Push}, Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:205: The pattern <Rest, Line, {'error', S}, _Ts> can never match the type <_,_,'error',_>
+leexinc.hrl:243: The pattern <Rest, Line, {'token', _T, Push}, Error> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:243: The pattern <Rest, Line, {'token', _T, Push}, Error> can never match the type <_,_,'error',_>
+leexinc.hrl:246: The pattern <Rest, Line, {'end_token', _T}, Error> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:246: The pattern <Rest, Line, {'end_token', _T}, Error> can never match the type <_,_,'error',_>
+leexinc.hrl:248: The pattern <Rest, Line, {'end_token', _T, Push}, Error> can never match the type <_,_,'error' | 'skip_token',_>
+leexinc.hrl:248: The pattern <Rest, Line, {'end_token', _T, Push}, Error> can never match the type <_,_,'error',_>
+leexinc.hrl:251: The pattern <Rest, Line, 'skip_token', Error> can never match the type <_,_,'error',_>
+leexinc.hrl:253: The pattern <Rest, Line, {'skip_token', Push}, Error> can never match the type <_,_,'error',_>
+leexinc.hrl:256: The pattern <Rest, Line, {'error', _S}, Error> can never match the type <_,_,'error',_>
+leexinc.hrl:260: Function yyrev/2 will never be called
+yeccpre.hrl:49: Function return_error/2 will never be called
+ec_compiler_tests.erl:120: The created fun has no local return
+ec_compiler_tests.erl:120: The created fun has no local return
+ec_compiler_tests.erl:121: The call ec_compiler:parse_command("python -u file_create.py %<tag> %<book> %<filename>",[{'book',[49 | 66 | 107 | 111,...]} | {'filename',[101 | 115 | 116,...]} | {'tag',[49,...]},...]) breaks the contract (binary(),[{Key::atom(),Value::any()}]) -> [any()]
+ec_db_tests.erl:23: The variable __V can never match since previous clauses completely covered the type 'ok'
+ec_db_tests.erl:28: The created fun has no local return
+ec_db_tests.erl:28: The created fun has no local return
+ec_db_tests.erl:28: The call ec_db:update({'20101101', "bb/A"},'state','running') breaks the contract ({Name::string(),RunDate::atom()},Key::atom(),Value::any()) -> 'ok' | {'error','record_not_found'}
+ec_db_tests.erl:31: The created fun has no local return
+ec_db_tests.erl:31: The created fun has no local return
+ec_db_tests.erl:31: The call ec_db:update({'20101102', "bb/A"},'state','running') breaks the contract ({Name::string(),RunDate::atom()},Key::atom(),Value::any()) -> 'ok' | {'error','record_not_found'}
+ec_fsm_process_fns_tests.erl:41: The created fun has no local return
+ec_fsm_process_fns_tests.erl:41: The created fun has no local return
+ec_fsm_process_fns_tests.erl:41: The pattern [{'fsm_state', "B~1", _, "python", _, [], _, _, _, _, _, _, _, _, _, _, _, _, _, _}, {'fsm_state', "B~2", _, "python", _, [], _, _, _, _, _, _, _, _, _, _, _, _, _, _}] can never match the type []
+ec_fsm_process_fns_tests.erl:44: The created fun has no local return
+ec_fsm_process_fns_tests.erl:44: The created fun has no local return
+ec_fsm_process_fns_tests.erl:44: The pattern [{'fsm_state', "B~1", _, "python", _, ["A~1", "N"], _, _, _, _, _, _, _, _, _, _, _, _, _, _}, {'fsm_state', "B~2", _, "python", _, ["A~2", "N"], _, _, _, _, _, _, _, _, _, _, _, _, _, _}] can never match the type []
+ec_fsm_process_fns_tests.erl:63: Invalid type specification for function ec_fsm_process_fns_tests:get_state/2. The success typing is (_,#fsm_state{parents::dict(),clones::dict(),state::atom()}) -> atom()
+ec_name_server_tests.erl:24: The created fun has no local return
+ec_name_server_tests.erl:24: The created fun has no local return
+ec_name_server_tests.erl:24: The call ec_name_server:add('test_name',pid(),'20100830') breaks the contract (Name::string(),Pid::pid(),RunDate::atom()) -> 'ok'
+ec_name_server_tests.erl:25: The created fun has no local return
+ec_name_server_tests.erl:25: The created fun has no local return
+ec_name_server_tests.erl:25: The call ec_name_server:add('test_name',pid(),'20100829') breaks the contract (Name::string(),Pid::pid(),RunDate::atom()) -> 'ok'
+ec_name_server_tests.erl:26: The created fun has no local return
+ec_name_server_tests.erl:26: The created fun has no local return
+ec_name_server_tests.erl:26: The call ec_name_server:get('test_name','20100830') breaks the contract (Name::string(),RunDate::atom()) -> {'ok',pid()} | {'error','name_not_found'}
+ec_name_server_tests.erl:27: The created fun has no local return
+ec_name_server_tests.erl:27: The created fun has no local return
+ec_name_server_tests.erl:27: The call ec_name_server:get('test_name','20100829') breaks the contract (Name::string(),RunDate::atom()) -> {'ok',pid()} | {'error','name_not_found'}
+ec_name_server_tests.erl:28: The created fun has no local return
+ec_name_server_tests.erl:28: The created fun has no local return
+ec_name_server_tests.erl:28: The pattern {'ok', {'test_name', '20100830'}} can never match the type {'error','pid_not_found'} | {'ok',{string(),atom()}}
+ec_name_server_tests.erl:29: The created fun has no local return
+ec_name_server_tests.erl:29: The created fun has no local return
+ec_name_server_tests.erl:29: The call ec_name_server:add('test_name',pid(),'20100830') breaks the contract (Name::string(),Pid::pid(),RunDate::atom()) -> 'ok'
+ec_name_server_tests.erl:30: The created fun has no local return
+ec_name_server_tests.erl:30: The created fun has no local return
+ec_name_server_tests.erl:30: The call ec_name_server:delete('test_name','20100830') breaks the contract (Name::string(),RunDate::atom()) -> 'ok' | {'error',any()}
+ec_name_server_tests.erl:31: The created fun has no local return
+ec_name_server_tests.erl:31: The created fun has no local return
+ec_name_server_tests.erl:31: The call ec_name_server:get('test_name','20100830') breaks the contract (Name::string(),RunDate::atom()) -> {'ok',pid()} | {'error','name_not_found'}
+ec_util_tests.erl:122: The created fun has no local return
+ec_util_tests.erl:122: The created fun has no local return
+ec_util_tests.erl:122: The pattern {'error', 'bad_path', _} can never match the type [{{'file',[any()]},{'template',[any()]}}] | {'error','bad_path'}
+ec_util_tests.erl:127: The created fun has no local return
+ec_util_tests.erl:127: The created fun has no local return
+ec_util_tests.erl:127: The pattern {'error', 'bad_path', _} can never match the type [{{'file',[any()]},{'template',[any()]}}] | {'error','bad_path'}
+ec_util_tests.erl:153: The created fun has no local return
+ec_util_tests.erl:153: The created fun has no local return
+ec_util_tests.erl:153: The pattern {[{"ec/C", {'fsm_state', "ec/C", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'waiting', _, _}}, {"ec/B", {'fsm_state', "ec/B", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'waiting', _, _}}], [{"ec/A", {'fsm_state', "ec/A", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'not_started', _, _}}]} can never match the type {[],[]}
+ec_util_tests.erl:160: The created fun has no local return
+ec_util_tests.erl:160: The created fun has no local return
+ec_util_tests.erl:160: The pattern [[{'tag', "1"}, {'book', "Book1"}], [{'tag', "2"}, {'book', "Book2"}], [{'tag', "3"}, {'book', "Book3"}], [{'tag', "4"}, {'book', "Book4"}], [{'tag', "5"}, {'book', "Book5"}], [{'tag', "6"}, {'book', "Book6"}], [{'tag', "7"}, {'book', "Book7"}], [{'tag', "8"}, {'book', "Book8"}], [{'tag', "9"}, {'book', "Book9"}]] can never match the type []
+ec_util_tests.erl:162: The created fun has no local return
+ec_util_tests.erl:162: The created fun has no local return
+ec_util_tests.erl:162: The pattern {'error', 'enoent'} can never match the type []
+ec_util_tests.erl:182: The created fun has no local return
+ec_util_tests.erl:182: The created fun has no local return
+ec_util_tests.erl:183: The pattern [{'ok', {'fsm_state', "bb/A", "start batch", "<NONE>", _, [], 3, {'sch', {'offset', 0, 'none'}, {'time', {0, 5, 0}}}, {'sch', {'dow', ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']}, {'dom', [0]}, {'doy', [0]}}, 'NOP', 'undefined', _, _, _, _, _, _, _, _, _}}] can never match the type [] | {'error','bad_path'}
+ec_util_tests.erl:192: The created fun has no local return
+ec_util_tests.erl:192: The created fun has no local return
+ec_util_tests.erl:193: The pattern [{'ok', {'fsm_state', "bb/B", "depends on A", _, _, ["bb/A"], 3, 'undefined', {'sch', {'dow', ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']}, {'dom', [0]}, {'doy', [0]}}, 'clone_base', {'file', "b_c_clonesource"}, _, _, _, _, _, _, _, _, _}}] can never match the type [] | {'error','bad_path'}
+ec_compiler_tests.erl:38: The pattern {'ok', {'fsm_state', [{{'name', 1, 'name'}, {'string', 1, "bb/A"}}, {{'description', 2, 'description'}, {'string', 2, "start batch"}}, {{'command', 3, 'command'}, {'string', 3, "<NONE>"}}, {{'repeat', 4, 'repeat'}, {'integer', 4, 3}}, {{'start_after', 1, 'start_after'}, {'string', 5, "00:05"}}, {{'type', 6, 'type'}, {'atom', 6, 'NOP'}}]}} can never match the type {'error',atom()} | {'ok',{'fsm_state',[]}}
+ec_compiler_tests.erl:47: The pattern {'ok', {'fsm_state', [{{'name', 1, 'name'}, {'string', 1, "bb/B"}}, {{'description', 2, 'description'}, {'string', 2, "depends on A"}}, {{'command', 3, 'command'}, {'string', 3, _}}, {{'depends_on', 1, 'depends_on'}, {'list', 1, [{'string', 4, "bb/A"}]}}, {{'clonesourcelist', 5, 'clonesourcelist'}, {'file', 1, {'string', 5, "b_c_clonesource"}}}, {{'repeat', 6, 'repeat'}, {'integer', 6, 3}}]}} can never match the type {'error',atom()} | {'ok',{'fsm_state',[]}}
+ec_compiler_tests.erl:58: The pattern {'ok', {'fsm_state', [{{'name', 1, 'name'}, {'string', 1, "bb/E"}}, {{'description', 2, 'description'}, {'string', 2, "depends on C,D"}}, {{'command', 3, 'command'}, {'string', 3, _}}, {{'depends_on', 1, 'depends_on'}, {'list', 1, [{'string', 4, "bb/C"}, {'string', 4, "bb/D"}]}}, {{'clonesourcelist', 5, 'clonesourcelist'}, {'file', 1, {'string', 5, "e_clonesource"}}}, {{'repeat', 7, 'repeat'}, {'integer', 7, 3}}]}} can never match the type {'error',atom()} | {'ok',{'fsm_state',[]}}
+ec_util_tests.erl:114: The pattern [{{'file', "../job_root/bb/A"}, {'template', ["../job_root/bb/Template"]}}] can never match the type [] | {'error','bad_path',string()}
+ec_util_tests.erl:116: The pattern [{{'file', "../job_root/cc/AA"}, {'template', []}}] can never match the type [] | {'error','bad_path',string()}
+ec_util_tests.erl:144: The pattern {[{"ec/C", {'fsm_state', "ec/C", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'waiting', _, _}}, {"ec/B", {'fsm_state', "ec/B", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'waiting', _, _}}], [{"ec/A", {'fsm_state', "ec/A", _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 'not_started', _, _}}]} can never match the type {[],[]}
+ec_compiler_tests.erl:139: The call ec_compiler:parse_datetime([98,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:140: The call ec_compiler:parse_datetime([32 | 45 | 49 | 53 | 119,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:141: The call ec_compiler:parse_datetime([32 | 49 | 50 | 51 | 52 | 53 | 119,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:142: The call ec_compiler:parse_datetime([100,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:143: The call ec_compiler:parse_datetime([32 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 119,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:151: The call ec_compiler:parse_datetime([43 | 48 | 49 | 58 | 98,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:152: The call ec_compiler:parse_datetime([43 | 48 | 49 | 58,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_compiler_tests.erl:153: The call ec_compiler:parse_datetime([48 | 49 | 58,...]) will never return since the success typing is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}} and the contract is ({'start_after',{'offset',{_,_,_}} | {'offset',{_,_,_},{'b',_,_}},{'time',_}} | {'schedule',{'dow',_,[any()]},{'dom',_,[any()]},{'doy',_,[any()]}}) -> {'sch',{'offset',_,_},{'time',_}} | {'sch',{'dow',['fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'today' | 'tue' | 'wed']},{'dom',[any()]},{'doy',[any()]}}
+ec_util_tests.erl:151: The pattern [[{'tag', "1"}, {'book', "Book1"}], [{'tag', "2"}, {'book', "Book2"}], [{'tag', "3"}, {'book', "Book3"}], [{'tag', "4"}, {'book', "Book4"}], [{'tag', "5"}, {'book', "Book5"}], [{'tag', "6"}, {'book', "Book6"}], [{'tag', "7"}, {'book', "Book7"}], [{'tag', "8"}, {'book', "Book8"}], [{'tag', "9"}, {'book', "Book9"}]] can never match the type []
+ec_util_tests.erl:153: The pattern {'error', 'enoent'} can never match the type []
+ec_util_tests.erl:174: The pattern [{'ok', {'fsm_state', "bb/A", "start batch", "<NONE>", _, [], 3, {'sch', {'offset', 0, 'none'}, {'time', _}}, {'sch', {'dow', ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']}, {'dom', [0]}, {'doy', [0]}}, 'NOP', 'undefined', _, _, _, _, _, _, _, _, _}}] can never match the type [] | {'error','bad_path',string()}
+ec_util_tests.erl:184: The pattern [{'ok', {'fsm_state', "bb/B", "depends on A", _, _, ["bb/A"], 3, 'undefined', {'sch', {'dow', ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']}, {'dom', [0]}, {'doy', [0]}}, 'clone_base', {'file', "b_c_clonesource"}, _, _, _, _, _, _, _, _, _}}] can never match the type [] | {'error','bad_path',string()}
+ec_compiler_tests.erl:38: The pattern {'ok', {'fsm_state', [{{'name', 1, 'name'}, {'string', 1, "bb/A"}}, {{'description', 2, 'description'}, {'string', 2, "start batch"}}, {{'command', 3, 'command'}, {'string', 3, "<NONE>"}}, {{'repeat', 4, 'repeat'}, {'integer', 4, 3}}, {{'start_after', 1, 'start_after'}, {'string', 5, _}}, {{'type', 6, 'type'}, {'atom', 6, 'NOP'}}]}} can never match the type {'error',atom()} | {'ok',{'fsm_state',[]}}

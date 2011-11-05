@@ -90,10 +90,11 @@ init([]) ->
 %% Description: Handling call messages
 %%--------------------------------------------------------------------
 handle_call({create, Name, Schema}, _From, State) ->
-    case tk_storage:create(db_full_name(State#state.tk_root, Name), Schema) of
-	{ok, Fd, PickleFunc, UnpickleFunc} ->
-	    {reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}};
-	{error, Reason} -> {reply, {error, Reason}, State}
+    try
+	{ok, Fd, PickleFunc, UnpickleFunc} =  tk_storage:create(db_full_name(State#state.tk_root, Name), Schema),
+	{reply, ok, State#state{open_db = [{Name, {Fd, PickleFunc, UnpickleFunc}} | State#state.open_db]}}
+    catch
+	_Err:Reason -> {reply, Reason, State}
     end;
 handle_call({open, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of

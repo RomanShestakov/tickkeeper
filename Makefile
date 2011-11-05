@@ -26,7 +26,7 @@ relclean:
 	rm -rf rel/bf_tsdb
 
 APPS = kernel stdlib sasl erts ssl tools os_mon runtime_tools crypto inets \
-xmerl snmp public_key mnesia eunit syntax_tools compiler
+xmerl snmp public_key mnesia eunit syntax_tools compiler hipe webtool
 COMBO_PLT = $(HOME)/.tk_dialyzer_plt
 
 check_plt: compile
