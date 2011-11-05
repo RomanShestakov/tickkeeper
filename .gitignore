@@ -8,4 +8,6 @@ logs
 *.beam
 /deps/*
 /docs/*
+rel/tickkeeper
+rel/tickkeeper/*
 
