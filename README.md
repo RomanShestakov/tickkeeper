@@ -1,7 +1,7 @@
 tickkeeper - simple timeseries database
 ==============================================
 
-need a simple way to store timeseries data and it doesn't seem to be anything available in open source.
+needed a simple way to store time series data and it couldn't find anything available in open source.
 This is really simple implementation done in Erlang using binary files as storage. Allows to define custom schema's for ticks.
 No idea at this point how performant or scalable this thing is. Also haven't done anything to allow range selects, so read call retrieves entire curve. There is certantly a room for improvements (maybe REST API, connections over TCP sockets, bindings to other languages, etc).
 
