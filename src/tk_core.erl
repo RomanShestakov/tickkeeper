@@ -78,7 +78,7 @@ handle_call({create, Name, Schema}, _From, State) ->
     end;
 handle_call({open, Name}, _From, State) ->
     case proplists:lookup(Name, State#state.open_db) of
-	{Name, _Fd} -> {reply, {error, db_already_open}, State};
+	{Name, _Fd} -> {reply, ok, State};
 	none ->
 	    case tk_storage:open(db_full_name(State#state.tk_root, Name)) of
 		{ok, Fd, PickleFunc, UnpickleFunc} ->

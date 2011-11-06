@@ -31,7 +31,7 @@ run(_P) ->
      [
       ?_assertMatch(ok, tk_client:create("test_db", ?SCHEMA)),
       ?_assertMatch({error, db_already_exists}, tk_client:create("test_db", ?SCHEMA)),
-      ?_assertMatch({error, db_already_open}, tk_client:open("test_db")),
+      ?_assertMatch(ok, tk_client:open("test_db")),
       ?_assertMatch({error,{db_not_exist, _}}, tk_client:open("test_db1")),
       %% test append / read
       ?_assertMatch([ok, ok, ok], [tk_client:append("test_db", T) || T <- [?TEST_TICK, ?TEST_TICK, ?TEST_TICK]]),
