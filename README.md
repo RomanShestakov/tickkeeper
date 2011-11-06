@@ -31,6 +31,10 @@ then build release:
     $ make rel
 
 start app with 
+
+./start.sh
+
+or start release with:
 ./rel/tickkeeper/bin/tickkeeper console
 
 create test db:
