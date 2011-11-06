@@ -11,6 +11,6 @@
   {mod, { tk_app, []}},
   {env, [
 	 {log4erl_config, "etc/log4erl.conf"},
-	 {tk_root, "../db"}	
+	 {tk_root, "./db"}	
   ]}
  ]}.

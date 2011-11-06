@@ -12,8 +12,9 @@ clean:
 
 test: all
 	mkdir -p .eunit
+	mkdir -p .eunit/db
 	cp -r etc .eunit/.
-	rm -rf db/test_db*
+	rm -rf .eunit/db/*
 	rebar skip_deps=true eunit
 
 doc:
