@@ -23,12 +23,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0,
-	 create/2,
-	 open/1,
-	 close/1,
-	 append/2,
-	 read/1]).
+-export([start_link/0]).
 
 -define(SERVER, ?MODULE).
 
@@ -51,21 +46,6 @@ start_link() ->
 %%====================================================================
 %% gen_server callbacks
 %%====================================================================
--spec open(string()) -> ok | {error, any()}.
-open(Name) ->
-    gen_server:call({global, ?SERVER}, {open, Name}).
-
-create(Name, Schema) ->
-    gen_server:call({global, ?SERVER}, {create, Name, Schema}).
-
-close(Name) ->
-    gen_server:call({global, ?SERVER}, {close, Name}).
-
-read(Name) ->
-    gen_server:call({global, ?SERVER}, {read, Name}).
-
-append(Name, Tick) ->
-    gen_server:call({global, ?SERVER}, {append, Name, Tick}).
 
 %%--------------------------------------------------------------------
 %% Function: init(Args) -> {ok, State} |

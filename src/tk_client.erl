@@ -1,6 +1,6 @@
 %% Copyright (C) 2011 Roman Shestakov
 %%%
-%%% This file is part of bf_bot
+%%% This file is part of tickkeeper
 %%%
 %%% tickkeeper is free software: you can redistribute it and/or modify
 %%% it under the terms of the GNU Lesser General Public License as 
@@ -18,27 +18,30 @@
 %%%
 %%% Author contact: romanshestakov@yahoo.co.uk
 
--module(tk_sup).
+-module(tk_client).
 
--behaviour(supervisor).
+-define(SERVER, tk_core).
 
 %% API
--export([start_link/0]).
+-export([create/2,
+	 open/1,
+	 close/1,
+	 append/2,
+	 read/1
+	]).
 
-%% Supervisor callbacks
--export([init/1]).
+-spec open(string()) -> ok | {error, any()}.
+open(Name) ->
+    gen_server:call({global, ?SERVER}, {open, Name}).
 
-%% ===================================================================
-%% API functions
-%% ===================================================================
+create(Name, Schema) ->
+    gen_server:call({global, ?SERVER}, {create, Name, Schema}).
 
-start_link() ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+close(Name) ->
+    gen_server:call({global, ?SERVER}, {close, Name}).
 
-%% ===================================================================
-%% Supervisor callbacks
-%% ===================================================================
+read(Name) ->
+    gen_server:call({global, ?SERVER}, {read, Name}).
 
-init([]) ->
-    TK = {'tk_core', {'tk_core',start_link,[]}, permanent,2000,worker,['tk_core']},
-    {ok, {{one_for_one, 5, 10}, [TK]}}.
+append(Name, Tick) ->
+    gen_server:call({global, ?SERVER}, {append, Name, Tick}).
