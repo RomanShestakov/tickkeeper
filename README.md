@@ -16,7 +16,7 @@ tickkeeper uses rebar for building and wraps it in a Makefile for convenience.
 
 First clone from GitHub:
 
-    $ git clone git://github.com/romanshestakov/tickkeeper.git
+    $ git clone git@github.com:RomanShestakov/tickkeeper.git
 
 Then change into the newly created directory:
 
