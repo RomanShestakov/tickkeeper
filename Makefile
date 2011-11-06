@@ -4,6 +4,7 @@ get-deps:
 	rebar get-deps
 
 compile:
+	mkdir -p db
 	rebar compile
 clean:
 	rebar clean
