@@ -23,7 +23,7 @@ rel: all
 	chmod u+x rel/tickkeeper/bin/tickkeeper
 
 relclean:
-	rm -rf rel/bf_tsdb
+	rm -rf rel/tickkeeper
 
 APPS = kernel stdlib sasl erts ssl tools os_mon runtime_tools crypto inets \
 xmerl snmp public_key mnesia eunit syntax_tools compiler hipe webtool
