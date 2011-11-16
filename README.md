@@ -14,7 +14,7 @@ No idea at this point how performant or scalable this thing is. Also haven't don
 ## Building
 
 tickkeeper uses rebar for building and wraps it in a Makefile for convenience, so clone / build rebar from here:
-https://github.com/basho/rebar.git
+https://github.com/basho/rebar
 
 Then clone tickkeeper from GitHub:
 
