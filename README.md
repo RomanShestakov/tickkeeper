@@ -9,12 +9,14 @@ No idea at this point how performant or scalable this thing is. Also haven't don
 ## Dependencies
 
 1. log4erl for logging
+2. Smerl for creating/compiling schemas dynamically
 
 ## Building
 
-tickkeeper uses rebar for building and wraps it in a Makefile for convenience.
+tickkeeper uses rebar for building and wraps it in a Makefile for convenience, so clone / build rebar from here:
+https://github.com/basho/rebar.git
 
-First clone from GitHub:
+Then clone tickkeeper from GitHub:
 
     $ git clone git@github.com:RomanShestakov/tickkeeper.git
 
@@ -38,13 +40,13 @@ or start release with:
 ./rel/tickkeeper/bin/tickkeeper console
 
 create test db:
-tk_core:create("test_db",  [{"timestamp", {integer, 64}}, {"bid", {float, 64}}]).
+tk_client:create("test_db",  [{"timestamp", {integer, 64}}, {"bid", {float, 64}}]).
 
 save tick:
-tk_core:append("test_db", {calendar:datetime_to_gregorian_seconds(calendar:now_to_datetime(now())), 3.1345}).
+tk_client:append("test_db", {calendar:datetime_to_gregorian_seconds(calendar:now_to_datetime(now())), 3.1345}).
 
 read curve from db:
-tk_core:read("test_db").
+tk_client:read("test_db").
 
 License
 =======
